@@ -19,8 +19,12 @@ export default function Home() {
 
   // localStorage から状態を読み込む関数
   const loadInitialState = () => {
-    const savedNumbers = localStorage.getItem("bingoNumbers");
-    return savedNumbers ? JSON.parse(savedNumbers) : BINGO_NUMBERS;
+    if (typeof window !== 'undefined') {
+      const savedNumbers = localStorage.getItem("bingoNumbers");
+      return savedNumbers ? JSON.parse(savedNumbers) : BINGO_NUMBERS;
+    } else {
+      return BINGO_NUMBERS;
+    }
   };
   const [allNumbers, setAllNumbers] = useState<BingoNumber[]>(loadInitialState());
   
