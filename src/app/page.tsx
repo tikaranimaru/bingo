@@ -18,13 +18,12 @@ export default function Home() {
   const [isEditMode, setIsEditMode] = useState(false);
 
   // localStorage から状態を読み込む関数
+  // TODO: ReferenceError: localStorage is not defined
+  //   at loadInitialState (./src/app/page.tsx:24:30)
+  //   at Home (./src/app/page.tsx:27:89)
   const loadInitialState = () => {
-    if (typeof window !== 'undefined') {
-      const savedNumbers = localStorage.getItem("bingoNumbers");
-      return savedNumbers ? JSON.parse(savedNumbers) : BINGO_NUMBERS;
-    } else {
-      return BINGO_NUMBERS;
-    }
+    const savedNumbers = localStorage.getItem("bingoNumbers");
+    return savedNumbers ? JSON.parse(savedNumbers) : BINGO_NUMBERS;
   };
   const [allNumbers, setAllNumbers] = useState<BingoNumber[]>(loadInitialState());
   
