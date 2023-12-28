@@ -14,6 +14,8 @@ export default function Home() {
   const [number, setNumber] = useState<number>(0);
   const [luLength, setLuLength] = useState<number>(0);
   const [isRunning, setIsRunning] = useState(false);
+  
+  const [isEditMode, setIsEditMode] = useState(false);
 
   // localStorage から状態を読み込む関数
   const loadInitialState = () => {
@@ -22,6 +24,21 @@ export default function Home() {
   };
   const [allNumbers, setAllNumbers] = useState<BingoNumber[]>(loadInitialState());
   
+  // 編集モードの切り替え
+  const toggleEditMode = () => {
+    setIsEditMode(!isEditMode);
+  };
+
+  // isDone の切り替え
+  const toggleNumberDone = (index: number) => {
+    setAllNumbers(allNumbers.map((n) => {
+      if (n.index === index) {
+        return { ...n, isDone: !n.isDone };
+      }
+      return n;
+    }));
+  };
+
   const incrementLu = () => {
     if (luLength < 50) {
       setLuLength((prevCount) => prevCount + 1);
@@ -78,10 +95,13 @@ export default function Home() {
       <div className="container mx-auto">
         <div className="grid grid-cols-2 gap-2 mt-4">
           <div className="col col-1">
-            <h1 className="text-3xl font-bold text-left">KitchenCamp BINGO</h1>
+            <h1 className="text-3xl font-bold text-left">KitchenCamp BINGO<small> @2024納会</small></h1>
           </div>
           <div className="col col-1 text-right">
-            <button className="btn btn-sm btn-warning" onClick={resetGame}>
+            <button className="btn btn-sm btn-accent me-2" onClick={toggleEditMode}>
+              {isEditMode ? 'Finish Editing' : 'Edit Mode'}
+            </button>
+            <button className="btn btn-sm btn-error" onClick={resetGame}>
               Reset Game
             </button>
           </div>
@@ -113,11 +133,11 @@ export default function Home() {
         <div>
           <div className="grid grid-cols-10 gap-2">
             {allNumbers.map((n) => (
-              <div className="col-1 text-base md:text-2xl" key={n.index}>
+              <div className="col-1 text-base md:text-2xl lg:text-4xl cursor-pointer" key={n.index} onClick={() => isEditMode && toggleNumberDone(n.index)}>
                 { n.isDone ?
-                  <div className="text-center p-2 md:p-4 bg-secondary text-white rounded-xl"><p className="font-bold">{n.index}</p></div>
+                  <div className="text-center p-2 md:p-4 lg:p-6 bg-secondary text-white rounded-xl"><p className="font-bold">{n.index}</p></div>
                   :
-                  <div className="text-center p-2 md:p-4 rounded-xl"><p>{n.index}</p></div>
+                  <div className="text-center p-2 md:p-4 lg:p-6 rounded-xl"><p>{n.index}</p></div>
                 }
               </div>
             ))}
